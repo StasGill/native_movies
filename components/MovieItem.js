@@ -1,40 +1,49 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Text, View, Image, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-export const MovieItem = ({ title, img }) => {
+export const MovieItem = ({ title, img, id, item, media_type }) => {
+  const navigation = useNavigation();
   const posterQuery = `https://image.tmdb.org/t/p/w300${img}`;
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: posterQuery }}
-        resizeMode="cover"
-        style={styles.image}
-      />
-      <Text style={styles.text}>{title}</Text>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => navigation.navigate("MovieItem", { id, media_type })}
+      >
+        <Image
+          source={{ uri: posterQuery }}
+          resizeMode="cover"
+          style={styles.image}
+        />
+        <Text style={styles.text}>{title}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: "96%",
+    flexBasis: "45%",
+    width: "100%",
     backgroundColor: "white",
-    marginHorizontal: "2%",
+    marginHorizontal: 10,
     marginVertical: 7,
     borderRadius: 8,
-    shadowColor: "grey",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 7,
+      height: 1,
     },
-    shadowOpacity: 0.41,
-    shadowRadius: 9.11,
-    elevation: 14,
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   image: {
-    width: "100%",
-    height: 400,
+    // flexBasis: "40%",
+    height: 250,
 
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
@@ -47,5 +56,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 17,
     justifyContent: "center",
+    color: "#303030",
   },
 });

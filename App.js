@@ -2,24 +2,9 @@ import React, { PureComponent } from "react";
 import { Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Home } from "./screens/Home";
+import { TrendScreen, HomeScreen } from "./screens/Trend";
 import { Icons } from "./components/Icons";
-
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
+import { FindScreen } from "./screens/FindScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -31,23 +16,32 @@ export default function App() {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === "Home") {
+            if (route.name === "Trend Today") {
               iconName = focused
                 ? "ios-information-circle"
                 : "ios-information-circle-outline";
-            } else if (route.name === "Settings") {
+            } else if (route.name === "Find Movie") {
               iconName = focused ? "ios-list-box" : "ios-list";
             }
 
             return <Icons color={color} type={route.name} />;
           },
-          tabBarActiveTintColor: "teal",
+          tabBarActiveTintColor: "white",
           tabBarInactiveTintColor: "gray",
           headerShown: false,
+          tabBarStyle: {
+            height: 80,
+            paddingHorizontal: 5,
+            paddingTop: 10,
+            paddingBottom: 20,
+            backgroundColor: "rgba(34,36,40,1)",
+            position: "absolute",
+            borderTopWidth: 0,
+          },
         })}
       >
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen name="Trend Today" component={TrendScreen} />
+        <Tab.Screen name="Find Movie" component={FindScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
