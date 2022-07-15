@@ -1,5 +1,5 @@
 # native_movies app 
 
-![ezgif com-gif-maker](https://user-images.githubusercontent.com/54024811/179202291-29770169-f757-4be6-b78a-69a848f4462b.gif)
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/54024811/179202907-c78d1820-cb02-4a5e-bb0d-4bc60a98b574.gif)
 
 
