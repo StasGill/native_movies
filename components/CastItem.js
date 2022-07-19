@@ -1,19 +1,27 @@
-import { Text, View, StyleSheet, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useCallback, useEffect } from "react";
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 
-export function CastItem({ name, item }) {
-  const posterQuery = `https://image.tmdb.org/t/p/w300${item.profile_path}`;
+export function CastItem({ name, img, item, type = "CastItem" }) {
+  const posterQuery = `https://image.tmdb.org/t/p/w300${img}`;
+  const navigation = useNavigation();
 
   return (
     <>
-      {item.profile_path && (
-        <View style={styles.container}>
-          <Image
-            source={{ uri: posterQuery }}
-            resizeMode="cover"
-            style={styles.image}
-          />
-          <Text style={styles.text}>{name}</Text>
-        </View>
+      {img && (
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => navigation.navigate(type, { id: item.id })}
+        >
+          <View style={styles.container}>
+            <Image
+              source={{ uri: posterQuery }}
+              resizeMode="cover"
+              style={styles.image}
+            />
+            <Text style={styles.text}>{name}</Text>
+          </View>
+        </TouchableOpacity>
       )}
     </>
   );
@@ -27,7 +35,7 @@ const styles = StyleSheet.create({
     width: 130,
   },
   image: {
-    height: 150,
+    height: 170,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },

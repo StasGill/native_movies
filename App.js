@@ -1,10 +1,9 @@
-import React, { PureComponent } from "react";
-import { Text, View } from "react-native";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { TrendScreen, HomeScreen } from "./screens/Trend";
 import { Icons } from "./components/Icons";
-import { FindScreen } from "./screens/FindScreen";
+import { FindStack } from "./stacks/FindStack";
+import { TrendStack } from "./stacks/TrendStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,8 +39,8 @@ export default function App() {
           },
         })}
       >
-        <Tab.Screen name="Trend Today" component={TrendScreen} />
-        <Tab.Screen name="Find Movie" component={FindScreen} />
+        <Tab.Screen name="Trend Today" component={TrendStack} />
+        <Tab.Screen name="Find Movie" component={FindStack} />
       </Tab.Navigator>
     </NavigationContainer>
   );

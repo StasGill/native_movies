@@ -1,44 +1,123 @@
-import { createStackNavigator } from "@react-navigation/stack";
-import { Find } from "../components/Find";
-import { MovieDescription } from "../components/MovieDescription";
+import React, { useRef } from "react";
+import { useEffect, useState } from "react";
+import NetInfo from "@react-native-community/netinfo";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  TextInput,
+  StyleSheet,
+  FlatList,
+} from "react-native";
+import { findMovie } from "../api/api";
+import { FindItem } from "../components/FindItem";
+import { Icons } from "../components/Icons";
 
-const Stack = createStackNavigator();
+export const FindScreen = () => {
+  const [query, setQuery] = useState("");
+  const [search, setSearch] = useState([]);
+  const ref = useRef();
+  const [isConnected, setConnection] = useState(true);
 
-export function FindScreen() {
+  const isConnect = () => {
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected) {
+        setConnection(true);
+      } else {
+        setConnection(false);
+      }
+    });
+  };
+
+  const handleSubmit = (e) => {
+    findMovie(query).then((item) => setSearch(item.data));
+
+    ref.current.scrollToOffset({ animated: true, offset: 0 });
+  };
+
+  useEffect(() => {
+    isConnect();
+    findMovie("a").then((item) => setSearch(item.data));
+  }, []);
+
+  const loadMore = () => {};
   return (
-    <Stack.Navigator initialRouteName="Trend">
-      <>
-        <Stack.Screen
-          name="Find"
-          component={Find}
-          options={{
-            title: "Find",
-            headerStyle: {
-              backgroundColor: "rgba(34,36,40,1)",
-              height: 82,
-            },
-            headerTintColor: "#fff",
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="FindItem"
-          component={MovieDescription}
-          options={{
-            title: "Description",
-            headerStyle: {
-              backgroundColor: "rgba(34,36,40,1)",
-              height: 82,
-            },
-            headerTintColor: "#fff",
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
-          }}
-        />
-      </>
-    </Stack.Navigator>
+    <View style={styles.container}>
+      {isConnected ? (
+        <>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Search movie"
+              style={styles.input}
+              onChangeText={setQuery}
+              value={query}
+              onSubmitEditing={handleSubmit}
+            />
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+              <Text style={styles.text}>Search</Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={search.results}
+            renderItem={(item) => <FindItem item={item} />}
+            keyExtractor={(item) => item.id}
+            style={styles.list}
+            ref={ref}
+            showsVerticalScrollIndicator={false}
+          />
+        </>
+      ) : (
+        <View style={styles.wifiContainer}>
+          <Icons color={"grey"} type={"Connection"} />
+          <Text style={styles.heading}>No internet</Text>
+        </View>
+      )}
+    </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    backgroundColor: "#e3e3e3",
+    paddingBottom: 77,
+  },
+  wifiContainer: {
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  heading: {
+    fontWeight: "bold",
+    fontSize: 27,
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  input: {
+    borderWidth: 1,
+    flex: 1,
+
+    borderRadius: 8,
+    marginRight: 5,
+    ...Platform.select({
+      ios: {
+        padding: 10,
+      },
+      android: {
+        padding: 5,
+      },
+    }),
+  },
+  button: {
+    backgroundColor: "teal",
+    width: 100,
+    padding: 10,
+    borderRadius: 8,
+  },
+  text: { textAlign: "center", fontWeight: "bold", color: "white" },
+  inputContainer: { flexDirection: "row", padding: 5 },
+  list: { paddingTop: 10 },
+});

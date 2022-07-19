@@ -1,18 +1,18 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { MovieDescription } from "../components/MovieDescription";
-import { Trend } from "../components/Trend";
+import { FindScreen } from "../screens/FindScreen";
+import { MovieDescriptionScreen } from "../screens/MovieDescriptionScreen";
 
 const Stack = createStackNavigator();
 
-export function TrendScreen() {
+export function FindStack() {
   return (
     <Stack.Navigator initialRouteName="Trend">
       <>
         <Stack.Screen
-          name="Trend"
-          component={Trend}
+          name="Find"
+          component={FindScreen}
           options={{
-            title: "Trend",
+            title: "Find",
             headerStyle: {
               backgroundColor: "rgba(34,36,40,1)",
               height: 82,
@@ -24,8 +24,8 @@ export function TrendScreen() {
           }}
         />
         <Stack.Screen
-          name="MovieItem"
-          component={MovieDescription}
+          name="FindItem"
+          component={MovieDescriptionScreen}
           options={{
             title: "Description",
             headerStyle: {

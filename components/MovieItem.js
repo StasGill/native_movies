@@ -3,12 +3,21 @@ import React from "react";
 import { Text, View, Image, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-export const MovieItem = ({ title, img, id, item, media_type }) => {
+export const MovieItem = ({
+  title,
+  img,
+  id,
+  item,
+  media_type,
+  width = "100%",
+  height = 250,
+  showName = true,
+}) => {
   const navigation = useNavigation();
   const posterQuery = `https://image.tmdb.org/t/p/w300${img}`;
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, width: width }}>
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => navigation.navigate("MovieItem", { id, media_type })}
@@ -16,9 +25,9 @@ export const MovieItem = ({ title, img, id, item, media_type }) => {
         <Image
           source={{ uri: posterQuery }}
           resizeMode="cover"
-          style={styles.image}
+          style={{ ...styles.image, height: height }}
         />
-        <Text style={styles.text}>{title}</Text>
+        {showName && <Text style={styles.text}>{title}</Text>}
       </TouchableOpacity>
     </View>
   );

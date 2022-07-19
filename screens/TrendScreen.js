@@ -1,21 +1,14 @@
 import NetInfo from "@react-native-community/netinfo";
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  Platform,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { fetchTrend } from "../api/api";
-import { Icons } from "./Icons";
-import { MovieItem } from "./MovieItem";
+import { Icons } from "../components/Icons";
+import { MovieItem } from "../components/MovieItem";
 
-export const Trend = () => {
+export const TrendScreen = () => {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(2);
-  const [isConnected, setConnection] = useState(false);
+  const [isConnected, setConnection] = useState(true);
 
   const isConnect = () => {
     NetInfo.fetch().then((state) => {

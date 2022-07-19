@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ImageBackground,
   ScrollView,
@@ -7,18 +7,22 @@ import {
   View,
   Platform,
 } from "react-native";
-import { getActorById, getCastById, getMovieById } from "../api/api";
-import { CastItem } from "./CastItem";
+import { getCastById, getMovieById } from "../api/api";
+import { CastItem } from "../components/CastItem";
+import { TouchLine } from "../components/TouchLine";
+import { Heading } from "../components/Heading";
 
-export function MovieDescription({ route }) {
+export const MovieDescriptionScreen = ({ route }) => {
   const [movie, setMovie] = useState({});
   const [cast, setCast] = useState([]);
   const { id, media_type } = route.params;
+  const ref = useRef();
   const posterQuery = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
 
   const image = { uri: posterQuery };
 
   useEffect(() => {
+    ref.current.scrollTo({ animated: true, offset: 0 });
     setMovie({});
     getMovieById(id, media_type).then(({ data }) => setMovie(data));
     getCastById(id, media_type).then(({ data }) => setCast(data));
@@ -26,10 +30,15 @@ export function MovieDescription({ route }) {
 
   return (
     <ImageBackground source={image} resizeMode="cover" style={{ flex: 1 }}>
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+        ref={ref}
+      >
         <View style={styles.textContainer}>
-          <Text style={styles.heading}>{movie.name || movie.title}</Text>
-          <Text style={styles.subHeading}>Genre :</Text>
+          <TouchLine />
+          <Heading title={movie.name || movie.title} />
+          <Heading title={"Genre :"} size={"h2"} />
           <ScrollView
             style={styles.pillsContainer}
             horizontal
@@ -41,43 +50,46 @@ export function MovieDescription({ route }) {
               </Text>
             ))}
           </ScrollView>
-          <Text style={styles.subHeading}>Year :</Text>
+          <Heading title={"Year :"} size={"h2"} />
           <Text style={styles.text}>
             {movie.release_date || movie.last_air_date}
           </Text>
-          <Text style={styles.subHeading}>Score :</Text>
+          <Heading title={"Score :"} size={"h2"} />
           <Text style={styles.text}>{movie.vote_average}</Text>
-          <Text style={styles.subHeading}>Description :</Text>
+          <Heading title={"Description :"} size={"h2"} />
           <Text style={styles.text}>{movie.overview}</Text>
-          <Text style={styles.subHeading}>Cast :</Text>
+          <Heading title={"Cast :"} size={"h2"} />
           <ScrollView
             style={styles.pillsContainer}
             horizontal
             showsHorizontalScrollIndicator={false}
           >
             {cast.cast?.map((item) => (
-              <CastItem name={item.name} item={item} key={item.id} />
+              <CastItem
+                name={item.name}
+                img={item.profile_path}
+                item={item}
+                key={item.id}
+              />
             ))}
           </ScrollView>
         </View>
       </ScrollView>
     </ImageBackground>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#e3e3e3",
-    paddingBottom: 100,
+    // paddingBottom: 80,
   },
   image: {
     flex: 1,
     justifyContent: "center",
   },
-  list: {
-    // marginBottom: 38,
-  },
+  list: {},
   textContainer: {
     flex: 1,
     backgroundColor: "white",
@@ -97,24 +109,6 @@ const styles = StyleSheet.create({
     shadowRadius: 9.11,
     elevation: 14,
   },
-  heading: {
-    fontWeight: "bold",
-    fontSize: 27,
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  subHeading: {
-    fontWeight: "bold",
-    marginBottom: 5,
-    ...Platform.select({
-      ios: {
-        fontSize: 20,
-      },
-      android: {
-        fontSize: 17,
-      },
-    }),
-  },
   text: {
     color: "#5d5e5e",
     ...Platform.select({
@@ -126,7 +120,10 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  pillsContainer: { flexDirection: "row", paddingVertical: 10 },
+  pillsContainer: {
+    flexDirection: "row",
+    paddingVertical: 10,
+  },
   pills: {
     fontSize: 20,
     marginRight: 10,
